@@ -76,7 +76,7 @@ def letter(lst):
 
 map = []
 input_file = open('input.txt','r')
-output_file = open('210339J.txt','w')
+output_file = open('output.txt','w')
 
 line_1 = input_file.readline()
 line_1 = line_1[:-1]
