@@ -106,7 +106,7 @@ while True:
 
 
 sol, len = hill(map)
-
+print(sol, len)
 for i in (trucks):
     [a,b] = i[0].split("_")
     output_file.writelines(i[0]+'#'+letter(sol[int(b)-1])+'\n')
