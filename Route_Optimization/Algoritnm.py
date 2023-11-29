@@ -1,18 +1,20 @@
 import random
 
-def rand(map):
+def generate_random_solution(map, trucks):
+    """
+    Generate a random solution for the given trucks and map.
+    """
     cities = list(range(len(map)))
     solution = []
 
-    for i in trucks:
-        pre_city = 0
+    for truck in trucks:
         sub_list = []
-        while len(sub_list) < i[1]:   
-            randomCity = cities[random.randint(1, len(cities) - 1)]
-            if (map[pre_city][randomCity] != 'N'):
-                sub_list.append(randomCity)
-                cities.remove(randomCity)
-                pre_city = randomCity
+        pre_city = 0
+        while len(sub_list) < truck[1]:
+            random_city = random.choice([city for city in cities if map[pre_city][city] != 'N'])
+            sub_list.append(random_city)
+            cities.remove(random_city)
+            pre_city = random_city
         solution.append(sub_list)
     return solution
 
