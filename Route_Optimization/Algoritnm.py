@@ -1,46 +1,49 @@
 import random
 
-def generate_random_solution(map, trucks):
-    """
-    Generate a random solution for the given trucks and map.
-    """
+def rand(map):
     cities = list(range(len(map)))
     solution = []
 
-    for truck in trucks:
-        sub_list = []
+    for i in trucks:
         pre_city = 0
-        while len(sub_list) < truck[1]:
-            random_city = random.choice([city for city in cities if map[pre_city][city] != 'N'])
-            sub_list.append(random_city)
-            cities.remove(random_city)
-            pre_city = random_city
+        sub_list = []
+        while len(sub_list) < i[1]:   
+            randomCity = cities[random.randint(1, len(cities) - 1)]
+            if (map[pre_city][randomCity] != 'N'):
+                sub_list.append(randomCity)
+                cities.remove(randomCity)
+                pre_city = randomCity
         solution.append(sub_list)
     return solution
 
-def route_length(map, solution):
-    total_length = 0
+def r_len(map, solution):
+    r_len = 0
+    for i in solution:
+        length = 0
+        for j in range(len(i)):
+            if (j == 0):
+                first_len = map[0][j]
+            else:
+                length += map[i[j-1]][i[j]]
+        r_len = first_len + length
+    return r_len
 
-    for route in solution:
-        route_length = 0
-        for i in range(1, len(route)):
-            route_length += map[route[i-1]][route[i]]
-        total_length += route_length + map[0][route[0]]
-
-    return total_length
-
-def get_neighbours(solution, map):
+def neigh(solution, map):
     neighbours = []
-    for route in solution:
-        for i in range(len(route)):
-            neighbour_route = route[:]
-            neighbour_route[i] = random.choice([city for city in range(len(map)) if map[route[i-1]][city] != 'N'])
-            neighbours.append(neighbour_route)
+    for i in solution:
+        for j in range(len(i)):
+            neighbour = rand(map)
+            neighbours.append(neighbour)
     return neighbours
 
 def best(map, neighbours):
-    bestNeighbour = min(neighbours, key=lambda x: r_len(map, x))
-    bestRouteLength = r_len(map, bestNeighbour)
+    bestRouteLength = r_len(map, neighbours[0])
+    bestNeighbour = neighbours[0]
+    for neighbour in neighbours:
+        curr_len = r_len(map, neighbour)
+        if curr_len < bestRouteLength:
+            bestRouteLength = curr_len
+            bestNeighbour = neighbour
     return bestNeighbour, bestRouteLength
 
 def hill(map):
@@ -57,21 +60,19 @@ def hill(map):
 
     return curr, curr_len
 
-def convert_to_int(line):
-    """Convert a list of strings to a list of integers.
-
-    Skip over 'N' values in the list.
-    """
-    int_list = []
-    for value in line:
-        if value == 'N':
+def to_int(line):
+    for i in range(len(line)):
+        if line[i] == 'N':
             continue
-        int_list.append(int(value))
-    return int_list
+        line[i]=int(line[i])
+    return line
 
-def convert_list_to_string(lst):
-    """Convert a list of integers to a string with each character separated by a comma."""
-    return ','.join(chr(num + 97) for num in lst)
+def letter(lst):
+    char_list=[]
+    for i in lst:
+        char_list.append(chr(i+97))
+    out_str=','.join(char_list)
+    return out_str
 
 map = []
 input_file = open('input.txt','r')
