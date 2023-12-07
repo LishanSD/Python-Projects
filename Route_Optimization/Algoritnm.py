@@ -71,11 +71,7 @@ def convert_to_int(line):
 
 def convert_list_to_string(lst):
     """Convert a list of integers to a string with each character separated by a comma."""
-    char_list = []
-    for num in lst:
-        char_list.append(chr(num + 97))
-    out_str = ','.join(char_list)
-    return out_str
+    return ','.join(chr(num + 97) for num in lst)
 
 map = []
 input_file = open('input.txt','r')
