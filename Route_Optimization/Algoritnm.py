@@ -29,12 +29,13 @@ def route_length(map, solution):
 
     return total_length
 
-def neigh(solution, map):
+def get_neighbours(solution, map):
     neighbours = []
-    for i in solution:
-        for j in range(len(i)):
-            neighbour = rand(map)
-            neighbours.append(neighbour)
+    for route in solution:
+        for i in range(len(route)):
+            neighbour_route = route[:]
+            neighbour_route[i] = random.choice([city for city in range(len(map)) if map[route[i-1]][city] != 'N'])
+            neighbours.append(neighbour_route)
     return neighbours
 
 def best(map, neighbours):
