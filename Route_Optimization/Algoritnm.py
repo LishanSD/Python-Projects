@@ -18,17 +18,16 @@ def generate_random_solution(map, trucks):
         solution.append(sub_list)
     return solution
 
-def r_len(map, solution):
-    r_len = 0
-    for i in solution:
-        length = 0
-        for j in range(len(i)):
-            if (j == 0):
-                first_len = map[0][j]
-            else:
-                length += map[i[j-1]][i[j]]
-        r_len = first_len + length
-    return r_len
+def route_length(map, solution):
+    total_length = 0
+
+    for route in solution:
+        route_length = 0
+        for i in range(1, len(route)):
+            route_length += map[route[i-1]][route[i]]
+        total_length += route_length + map[0][route[0]]
+
+    return total_length
 
 def neigh(solution, map):
     neighbours = []
