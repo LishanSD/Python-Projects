@@ -39,13 +39,8 @@ def get_neighbours(solution, map):
     return neighbours
 
 def best(map, neighbours):
-    bestRouteLength = r_len(map, neighbours[0])
-    bestNeighbour = neighbours[0]
-    for neighbour in neighbours:
-        curr_len = r_len(map, neighbour)
-        if curr_len < bestRouteLength:
-            bestRouteLength = curr_len
-            bestNeighbour = neighbour
+    bestNeighbour = min(neighbours, key=lambda x: r_len(map, x))
+    bestRouteLength = r_len(map, bestNeighbour)
     return bestNeighbour, bestRouteLength
 
 def hill(map):
