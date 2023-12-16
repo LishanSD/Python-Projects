@@ -57,12 +57,17 @@ def hill(map):
 
     return curr, curr_len
 
-def to_int(line):
-    for i in range(len(line)):
-        if line[i] == 'N':
+def convert_to_int(line):
+    """Convert a list of strings to a list of integers.
+
+    Skip over 'N' values in the list.
+    """
+    int_list = []
+    for value in line:
+        if value == 'N':
             continue
-        line[i]=int(line[i])
-    return line
+        int_list.append(int(value))
+    return int_list
 
 def letter(lst):
     char_list=[]
