@@ -69,11 +69,12 @@ def convert_to_int(line):
         int_list.append(int(value))
     return int_list
 
-def letter(lst):
-    char_list=[]
-    for i in lst:
-        char_list.append(chr(i+97))
-    out_str=','.join(char_list)
+def convert_list_to_string(lst):
+    """Convert a list of integers to a string with each character separated by a comma."""
+    char_list = []
+    for num in lst:
+        char_list.append(chr(num + 97))
+    out_str = ','.join(char_list)
     return out_str
 
 map = []
