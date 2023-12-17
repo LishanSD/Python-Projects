@@ -1,16 +1,18 @@
 import random
 
 def rand(map):
-    cities = list(range(1, len(map)))
+    cities = list(range(len(map)))
     solution = []
-    random_cities = random.sample(cities, len(trucks))
 
-    for i, truck in enumerate(trucks):
+    for i in trucks:
+        pre_city = 0
         sub_list = []
-        while len(sub_list) < truck[1]:
-            city = random_cities.pop(random.randint(0, len(random_cities)-1))
-            if map[sub_list[-1] if sub_list else 0][city] != 'N':
-                sub_list.append(city)
+        while len(sub_list) < i[1]:   
+            randomCity = cities[random.randint(1, len(cities) - 1)]
+            if (map[pre_city][randomCity] != 'N'):
+                sub_list.append(randomCity)
+                cities.remove(randomCity)
+                pre_city = randomCity
         solution.append(sub_list)
     return solution
 
