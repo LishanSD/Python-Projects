@@ -21,10 +21,7 @@ class Node:
         else:
             print(value)
 
-    #####################################################################
-    ######### Your task is to implement the following methods. ##########
-    #####################################################################
-            
+
     def insert(self, data, bracketed):
         '''
         Insert operators and operands into the binary tree.
@@ -34,8 +31,6 @@ class Node:
         we set bracketed as True.
         :return: self
         '''
-
-        #Include your code here
 
         new_node = Node(data)
 
@@ -63,8 +58,6 @@ class Node:
 
         :return: the evaluated value
         '''
-        
-        #Include your code here
 
         if self.data[0] == 'OPERAND' :
             return self.data[1]
@@ -82,7 +75,6 @@ class Node:
             elif operator == '^':
                 return left_value ** right_value
             
-
 
 # 1+(2*3)+3^2          
 root = Node(('OPERAND', 1))
