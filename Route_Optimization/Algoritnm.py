@@ -49,8 +49,14 @@ def neigh(solution, k=10):
 
 def best(map, neighbours):
     """Return best neighbour and its length."""
-    lengths = [(r_len(map, sol), sol) for sol in neighbours]
-    return min(lengths, key=lambda x: x[0])[1:]
+    best_len = float('inf')
+    best_neighbour = None
+    for sol in neighbours:
+        length = r_len(map, sol)
+        if length < best_len:
+            best_len = length
+            best_neighbour = sol
+    return best_neighbour, best_len
 
 
 def hill(map, trucks, max_iter=1000):
