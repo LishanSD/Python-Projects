@@ -1,116 +1,101 @@
 import random
 
-def rand(map):
-    cities = list(range(len(map)))
+def rand(map, trucks):
+    """Generate a random initial solution (list of routes per truck)."""
+    cities = list(range(1, len(map)))  # exclude depot (0)
     solution = []
 
-    for i in trucks:
+    for _, capacity in trucks:
         pre_city = 0
         sub_list = []
-        while len(sub_list) < i[1]:   
-            randomCity = cities[random.randint(1, len(cities) - 1)]
-            if (map[pre_city][randomCity] != 'N'):
+        while len(sub_list) < capacity and cities:
+            randomCity = random.choice(cities)  # ✅ simpler
+            if map[pre_city][randomCity] != 'N':
                 sub_list.append(randomCity)
                 cities.remove(randomCity)
                 pre_city = randomCity
         solution.append(sub_list)
     return solution
 
-def r_len(map, solution):
-    r_len = 0
-    for i in solution:
-        length = 0
-        for j in range(len(i)):
-            if (j == 0):
-                first_len = map[0][j]
-            else:
-                length += map[i[j-1]][i[j]]
-        r_len = first_len + length
-    return r_len
 
-def neigh(solution, map):
-    neighbours = []
-    for i in solution:
-        for j in range(len(i)):
-            neighbour = rand(map)
-            neighbours.append(neighbour)
-    return neighbours
+def r_len(map, solution):
+    """Calculate total route length of all trucks."""
+    total_len = 0
+    for route in solution:
+        if not route:
+            continue
+        length = map[0][route[0]]  # ✅ depot → first city
+        for j in range(1, len(route)):
+            length += map[route[j-1]][route[j]]
+        total_len += length + map[route[-1]][0]  # ✅ return to depot
+    return total_len
+
+
+def swap_neighbour(solution):
+    """Generate a neighbour by swapping two cities in a random route."""
+    neighbour = [route[:] for route in solution]  # deep copy
+    route_idx = random.randint(0, len(neighbour)-1)
+    route = neighbour[route_idx]
+    if len(route) > 1:
+        i, j = random.sample(range(len(route)), 2)
+        route[i], route[j] = route[j], route[i]
+    return neighbour
+
+
+def neigh(solution, k=10):
+    """Generate k neighbours using swap move."""
+    return [swap_neighbour(solution) for _ in range(k)]
+
 
 def best(map, neighbours):
-    bestRouteLength = r_len(map, neighbours[0])
-    bestNeighbour = neighbours[0]
-    for neighbour in neighbours:
-        curr_len = r_len(map, neighbour)
-        if curr_len < bestRouteLength:
-            bestRouteLength = curr_len
-            bestNeighbour = neighbour
-    return bestNeighbour, bestRouteLength
+    """Return best neighbour and its length."""
+    lengths = [(r_len(map, sol), sol) for sol in neighbours]
+    return min(lengths, key=lambda x: x[0])[1:]
 
-def hill(map):
-    curr = rand(map)
+
+def hill(map, trucks, max_iter=1000):
+    """Hill climbing with swap-based neighbours."""
+    curr = rand(map, trucks)
     curr_len = r_len(map, curr)
-    neighbours = neigh(curr, map)
-    bestNeighbour, best_len = best(map, neighbours)
 
-    while best_len < curr_len:
-        curr = bestNeighbour
-        curr_len = best_len
-        neighbours = neigh(curr, map)
+    for _ in range(max_iter):
+        neighbours = neigh(curr)
         bestNeighbour, best_len = best(map, neighbours)
-
+        if best_len < curr_len:
+            curr, curr_len = bestNeighbour, best_len
+        else:
+            break  # no better neighbour found
     return curr, curr_len
 
+
 def to_int(line):
-    for i in range(len(line)):
-        if line[i] == 'N':
-            continue
-        line[i]=int(line[i])
-    return line
+    return [int(x) if x != 'N' else 'N' for x in line]
+
 
 def letter(lst):
-    char_list=[]
-    for i in lst:
-        char_list.append(chr(i+97))
-    out_str=','.join(char_list)
-    return out_str
-
-map = []
-input_file = open('input.txt','r')
-output_file = open('output.txt','w')
-
-line_1 = input_file.readline()
-line_1 = line_1[:-1]
-
-line_1_list=to_int(line_1.split(','))
-map.append(line_1_list)
-
-for i in range(len(line_1_list)-1):
-    line=input_file.readline()
-    line = line[:-1]
-    line_list=to_int(line.split(','))
-    map.append(line_list)
-
-trucks=[]
-line=input_file.readline()
-while True:
-    if line[len(line)-1]=='\n':
-       line = line[:-1]
-
-    line_list=line.split('#')
-    line_list[1]=int(line_list[1])
-    trucks.append(line_list)
-    line=input_file.readline()
-
-    if line == '':
-        break
+    """Convert list of indices → letters (0→a, 1→b, etc.)."""
+    return ','.join(chr(i+97) for i in lst)
 
 
-sol, len = hill(map)
+# ---------------- Main ----------------
+with open('input.txt','r') as input_file, open('output.txt','w') as output_file:
+    line_1 = input_file.readline().strip()
+    map = [to_int(line_1.split(','))]
 
-for i in (trucks):
-    [a,b] = i[0].split("_")
-    output_file.writelines(i[0]+'#'+letter(sol[int(b)-1])+'\n')
+    for _ in range(len(map[0]) - 1):
+        line = input_file.readline().strip()
+        map.append(to_int(line.split(',')))
 
-output_file.write(str(len))
-input_file.close()
-output_file.close()
+    trucks = []
+    for line in input_file:
+        if not line.strip():
+            continue
+        name, cap = line.strip().split('#')
+        trucks.append((name, int(cap)))
+
+    sol, length = hill(map, trucks)
+
+    for i, (truck_name, _) in enumerate(trucks):
+        output_file.write(f"{truck_name}#{letter(sol[i])}\n")
+
+    output_file.write(str(length))
