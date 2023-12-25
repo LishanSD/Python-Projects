@@ -94,7 +94,7 @@ trucks=[]
 line=input_file.readline()
 while True:
     if line[len(line)-1]=='\n':
-       line = line[:-1]
+       line = line[: len(line)-1]
 
     line_list=line.split('#')
     line_list[1]=int(line_list[1])
