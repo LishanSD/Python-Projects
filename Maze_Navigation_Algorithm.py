@@ -5,6 +5,28 @@
 # ---------------------------------------------
 
 
+# # Implementing the stack
+# class Stack:
+#     # Initializing the stack
+#     def __init__(self):
+#         self.items = []
+    
+#     # Implementing the "push" function to push an item into the stack
+#     def push(self, item):
+#         self.items.append(item)
+
+#     # Implementing the "pop" function to remove an item from the stack    
+#     def pop(self):
+#         if (self.length() > 0):
+#             self.items.pop()
+#         else:
+#             return "Cannot pop"
+
+#     # Implementing the "length" function to get the length of the stack
+#     def length(self):
+#         return len(self.items)
+
+
 # The "Cell" class which represents a cell in the maze
 class Cell:
     # Initializing the "Cell" class
