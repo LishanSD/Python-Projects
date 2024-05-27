@@ -58,3 +58,17 @@ def game():
 
         score_list.append(score)
     
+        max_score = max(score_list)
+    winners = find_winners(score_list, max_score)
+
+    for i in range (players):
+        print("Player ", i+1, " score = ",score_list[i])
+
+    print()
+
+    if (len(winners) == 1):
+        print("The winner is Player", winners[0], "!")
+    else:
+        print("The winners are Player ", winners, "!")
+
+    print()
