@@ -73,6 +73,9 @@ def game():
 
     print()
 
+
+# The Game
+
 again = "y"
 while (again != "n"):
     if (again == "y"):
