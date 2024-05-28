@@ -72,3 +72,12 @@ def game():
         print("The winners are Player ", winners, "!")
 
     print()
+
+again = "y"
+while (again != "n"):
+    if (again == "y"):
+        game()
+        again = input("Play again? (y/n) : ")
+    else:
+        print("Invalid input")
+        again = input("Play again? (y/n) : ")
