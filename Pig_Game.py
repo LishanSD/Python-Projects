@@ -58,7 +58,7 @@ def game():
 
         score_list.append(score)
     
-        max_score = max(score_list)
+    max_score = max(score_list)
     winners = find_winners(score_list, max_score)
 
     for i in range (players):
